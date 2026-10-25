@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "name": "Registered response figure",
+  "note": "Verify the producer declaration against the immutable source table.",
+  "figure": {
+    "url": "/artifact/SIMULATION_ID/figure.png"
+  },
+  "source": {
+    "url": "/artifact/SIMULATION_ID/data.csv"
+  },
+  "sidecar": {
+    "url": "/artifact/SIMULATION_ID/figure.semantic.json"
+  },
+  "contract": {
+    "chart_type": "line_scatter",
+    "title": "Response over time",
+    "x_axis": {
+      "column": "time_ms",
+      "label": "Time",
+      "source_unit": {
+        "symbol": "ms"
+      },
+      "display_unit": {
+        "symbol": "s"
+      },
+      "scale": "linear"
+    },
+    "y_axis": {
+      "label": "Response",
+      "display_unit": {
+        "symbol": "1"
+      },
+      "scale": "linear"
+    },
+    "series": [
+      {
+        "id": "response",
+        "column": "response",
+        "label": "Response",
+        "source_unit": {
+          "symbol": "1"
+        }
+      }
+    ],
+    "missing_value_policy": "error",
+    "row_order": "source",
+    "duplicate_x_policy": "error",
+    "sampling": {
+      "method": "all"
+    },
+    "aggregation": "none"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "title": "Bounded hypothesis-tree campaign",
+  "question": "Does the candidate intervention improve the primary recorded outcome under the stated conditions?",
+  "context": "Replace this text with project-grounded background, assumptions, evidence IDs, and known conflicts.",
+  "context_of_use": "Exploratory prioritization only; not a clinical, regulatory, safety, or physical-execution decision.",
+  "classification": "exploratory",
+  "hypotheses": [
+    {
+      "id": "candidate-effect",
+      "statement": "The candidate intervention improves the primary recorded outcome.",
+      "rationale": "State the evidence-backed mechanism or prior result that motivates this branch.",
+      "falsification": "The prespecified recorded comparison does not exceed the stated margin.",
+      "priority": 5,
+      "parent_id": null,
+      "relation": "root",
+      "budget": {
+        "max_task_attempts": 4,
+        "max_gpu_tasks": 1,
+        "max_npu_tasks": 1
+      }
+    },
+    {
+      "id": "null-or-artifact",
+      "statement": "The observed difference is null, noise, bias, leakage, or measurement artifact.",
+      "rationale": "This competing branch protects against confirmation bias.",
+      "falsification": "Independent controls and sensitivity checks preserve the prespecified effect.",
+      "priority": 5,
+      "parent_id": "candidate-effect",
+      "relation": "alternative",
+      "budget": {
+        "max_task_attempts": 4,
+        "max_gpu_tasks": 1,
+        "max_npu_tasks": 1
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "evidence-map",
+      "title": "Map immutable evidence and assumptions",
+      "objective": "Create a bounded claim-evidence table, identify conflicts, and state what remains unobserved.",
+      "lane": "literature",
+      "hypothesis_ids": ["candidate-effect", "null-or-artifact"],
+      "depends_on": [],
+      "expected_outputs": ["Evidence IDs and exact claims", "Conflicts and missing evidence"],
+      "checkpoint": true,
+      "compute": "cpu",
+      "risk": "low",
+      "max_attempts": 1
+    },
+    {
+      "id": "gpu-sensitivity",
+      "title": "Run the bounded GPU sensitivity analysis",
+      "objective": "Use a recorded ScienceCode simulation or experiment with explicit parameters, seeds, controls, and uncertainty.",
+      "lane": "compute",
+      "hypothesis_ids": ["candidate-effect", "null-or-artifact"],
+      "depends_on": ["evidence-map"],
+      "expected_outputs": ["Verified simulation or experiment IDs", "Sensitivity and falsification results"],
+      "checkpoint": true,
+      "compute": "gpu",
+      "risk": "moderate",
+      "max_attempts": 1
+    },
+    {
+      "id": "npu-screen",
+      "title": "Run the bounded NPU screen",
+      "objective": "Use a recorded strict-provider ScienceCode inference and report provider execution separately from scientific interpretation.",
+      "lane": "compute",
+      "hypothesis_ids": ["candidate-effect", "null-or-artifact"],
+      "depends_on": ["evidence-map"],
+      "expected_outputs": ["Verified inference ID", "Provider evidence and bounded output comparison"],
+      "checkpoint": true,
+      "compute": "npu",
+      "risk": "moderate",
+      "max_attempts": 1
+    },
+    {
+      "id": "adversarial-review",
+      "title": "Challenge both branches",
+      "objective": "Inspect the completed records for leakage, confounding, numerical failure, unsupported claims, and alternative explanations.",
+      "lane": "reviewer",
+      "hypothesis_ids": ["candidate-effect", "null-or-artifact"],
+      "depends_on": ["gpu-sensitivity", "npu-screen"],
+      "expected_outputs": ["Claim-level findings", "Human-verdict recommendation with limitations"],
+      "checkpoint": true,
+      "compute": "cpu",
+      "risk": "low",
+      "max_attempts": 1
+    }
+  ],
+  "budget": {
+    "max_task_attempts": 4,
+    "max_gpu_tasks": 1,
+    "max_npu_tasks": 1,
+    "max_wall_clock_seconds": 14400
+  },
+  "hypothesis_policy": {
+    "require_final_assessment": true,
+    "human_adjudication": true,
+    "automatic_pruning": false
+  },
+  "execution_policy": {
+    "network": "disabled",
+    "physical_execution": "disabled",
+    "artifact_scope": "project_only",
+    "ai_disclosure": true
+  }
+}
+

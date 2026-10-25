@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "plot_area": {
+    "left": 0.12,
+    "top": 0.08,
+    "right": 0.96,
+    "bottom": 0.9
+  },
+  "x_domain": {
+    "minimum": 0,
+    "maximum": 10
+  },
+  "y_domain": {
+    "minimum": 0,
+    "maximum": 1
+  },
+  "background_color": {
+    "red": 255,
+    "green": 255,
+    "blue": 255
+  },
+  "axis_color": {
+    "red": 0,
+    "green": 0,
+    "blue": 0
+  },
+  "axis_width_pixels": 1,
+  "series": [
+    {
+      "id": "response",
+      "color": {
+        "red": 0,
+        "green": 114,
+        "blue": 178
+      },
+      "line_width_pixels": 2,
+      "marker_radius_pixels": 3
+    }
+  ],
+  "color_tolerance": 12,
+  "position_tolerance_pixels": 3,
+  "minimum_axis_coverage": 0.8,
+  "minimum_series_coverage": 0.8,
+  "maximum_unexpected_series_fraction": 0.05,
+  "minimum_background_fraction": 0.95
+}

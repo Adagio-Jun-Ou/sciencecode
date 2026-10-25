@@ -1,0 +1,14 @@
+node_modules/
+coverage/
+*.tgz
+.sciencecode/
+.tmp/
+__pycache__/
+*.py[cod]
+opencode/.gitignore
+opencode/package.json
+opencode/package-lock.json
+opencode/bun.lock
+opencode/node_modules/
+*.log
+npm-debug.log*

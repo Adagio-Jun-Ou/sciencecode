@@ -1,0 +1,15 @@
+# ScienceCode verifies artifacts by SHA-256 over exact bytes. Line-ending
+# translation would change those bytes, so a record hashed on one machine would
+# fail verification on another. Check out every text file exactly as committed.
+* -text
+
+# Formats that carry hashed or byte-exact content, marked binary so git never
+# diffs or translates them.
+*.png binary
+*.stl binary
+*.step binary
+*.onnx binary
+*.tgz binary
+*.zip binary
+*.pdf binary
+*.xlsx binary

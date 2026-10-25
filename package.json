@@ -1,0 +1,71 @@
+{
+  "name": "sciencecode",
+  "version": "0.41.0",
+  "description": "A standalone reproducibility-first research and multi-engine parametric CAD workbench powered by a pinned OpenCode engine",
+  "type": "module",
+  "bin": {
+    "sciencecode": "./bin/sciencecode.js"
+  },
+  "exports": {
+    ".": "./lib/core.js",
+    "./cli": "./lib/cli.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "lab/",
+    "opencode/",
+    "runtime/",
+    "scripts/",
+    "templates/",
+    "ARCHITECTURE.md",
+    "CHANGELOG.md",
+    "DEVELOPMENT.md",
+    "README.md",
+    "RESEARCH.md",
+    "RELEASE-GATES.md",
+    "SECURITY.md",
+    "SECURITY-THREAT-MODEL.md"
+  ],
+  "scripts": {
+    "check": "node --check bin/sciencecode.js && node --check lib/analysis-contracts.js && node --check lib/audit.js && node --check lib/benchmarks.js && node --check lib/cad-worker.js && node --check lib/cad.js && node --check lib/campaigns.js && node --check lib/chats.js && node --check lib/cli.js && node --check lib/compute.js && node --check lib/confirmatory.js && node --check lib/constants.js && node --check lib/core.js && node --check lib/doctor.js && node --check lib/error-semantics.js && node --check lib/evaluations.js && node --check lib/evidence.js && node --check lib/events.js && node --check lib/experiments.js && node --check lib/figure-comparisons.js && node --check lib/figure-registrations.js && node --check lib/figure-visuals.js && node --check lib/harness.js && node --check lib/hash.js && node --check lib/inferences.js && node --check lib/interactions.js && node --check lib/kernel-cli-worker.js && node --check lib/kernels.js && node --check lib/knowledge.js && node --check lib/lab.js && node --check lib/lineage.js && node --check lib/literature.js && node --check lib/literature-fetch-worker.js && node --check lib/mesh.js && node --check lib/pdf-extract-worker.js && node --check lib/pharmacology.js && node --check lib/png.js && node --check lib/preregistration.js && node --check lib/procedures.js && node --check lib/process.js && node --check lib/project-gate.js && node --check lib/project-gate-worker.js && node --check lib/project-snapshot-worker.js && node --check lib/project-snapshots.js && node --check lib/project.js && node --check lib/revisions.js && node --check lib/reviews.js && node --check lib/runs.js && node --check lib/runtime.js && node --check lib/security.js && node --check lib/simulations.js && node --check lib/snapshot.js && node --check lib/statistics.js && node --check lib/storage.js && node --check lib/units.js && node --check lab/app.js && node --check lab/cad.js && node --check lab/campaign.js && node --check lab/chemistry.js && node --check lab/compute.js && node --check lab/genomics.js && node --check lab/geometry.js && node --check lab/lineage.js && node --check lab/manuscript.js && node --check lab/preregistration.js && node --check lab/procedure.js && node --check lab/reproducibility.js && node --check lab/verification.js && node --check lab/visualization.js && node --check lab/xlsx.js && node --check scripts/cad-live-smoke.mjs && node --check scripts/cad-model-live-smoke.mjs && node --check scripts/cad-study-live-smoke.mjs && node --check scripts/cad-thermal-live-smoke.mjs && node --check scripts/cadquery-live-smoke.mjs && node --check scripts/lab-state-benchmark.mjs && node --check scripts/live-kernel-smoke.mjs && npm run evaluate && npm test",
+    "evaluate": "node bin/sciencecode.js evaluate",
+    "doctor": "node bin/sciencecode.js doctor",
+    "pack:check": "npm pack --dry-run",
+    "test": "node --test --test-concurrency=4",
+    "test:compat": "node --test tests/opencode.compat.test.mjs",
+    "test:coverage": "node --test --test-concurrency=4 --experimental-test-coverage",
+    "bench:lab-state": "node scripts/lab-state-benchmark.mjs",
+    "smoke:kernel": "node scripts/live-kernel-smoke.mjs",
+    "smoke:cad": "node scripts/cad-live-smoke.mjs",
+    "smoke:cadquery": "node scripts/cadquery-live-smoke.mjs",
+    "smoke:cad-model": "node scripts/cad-model-live-smoke.mjs",
+    "smoke:cad-thermal": "node scripts/cad-thermal-live-smoke.mjs",
+    "smoke:cad-study": "node scripts/cad-study-live-smoke.mjs"
+  },
+  "dependencies": {
+    "cross-spawn": "7.0.6",
+    "opencode-ai": "1.18.15",
+    "pdfjs-dist": "5.4.624"
+  },
+  "engines": {
+    "node": ">=20.16.0"
+  },
+  "keywords": [
+    "opencode",
+    "cad",
+    "openscad",
+    "cadquery",
+    "step",
+    "simulation",
+    "3d-printing",
+    "slicer",
+    "reproducibility",
+    "research",
+    "science"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@xmldom/xmldom": "0.9.10"
+  }
+}

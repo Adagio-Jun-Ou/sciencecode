@@ -1,0 +1,227 @@
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+export function defaultProcedureSpec(evidenceId = null) {
+  return {
+    name: 'Controlled response-assay procedure',
+    objective:
+      'Measure a prespecified response against reference and vehicle controls.',
+    domain: 'drug_discovery',
+    context_of_use:
+      'Design review and external qualified-facility planning only.',
+    source_evidence_ids: evidenceId ? [evidenceId] : [],
+    materials: [
+      {
+        material_id: 'sample',
+        name: 'Research sample',
+        role: 'sample',
+        amount: { value: 1, unit: 'planned unit' },
+        source: 'Replace with qualified source',
+        storage: 'Replace with source-specific requirements',
+        sds_required: true
+      },
+      {
+        material_id: 'reference',
+        name: 'Reference control',
+        role: 'control',
+        amount: { value: 1, unit: 'planned unit' },
+        source: 'Replace with qualified source',
+        storage: 'Replace with source-specific requirements',
+        sds_required: true
+      },
+      {
+        material_id: 'vehicle',
+        name: 'Vehicle control',
+        role: 'control',
+        amount: { value: 1, unit: 'planned unit' },
+        source: 'Replace with qualified source',
+        storage: 'Replace with source-specific requirements',
+        sds_required: true
+      }
+    ],
+    equipment: [
+      {
+        equipment_id: 'liquid-handler',
+        name: 'Qualified liquid-handling equipment',
+        purpose: 'Controlled material transfer',
+        operating_limits: 'Replace with validated range and facility limits.',
+        calibration_required: true,
+        qualification_required: true
+      },
+      {
+        equipment_id: 'reader',
+        name: 'Qualified measurement instrument',
+        purpose: 'Acquire the prespecified response',
+        operating_limits: 'Replace with the frozen method and qualified settings.',
+        calibration_required: true,
+        qualification_required: true
+      }
+    ],
+    controls: [
+      {
+        control_id: 'reference-control',
+        type: 'positive',
+        label: 'Reference response',
+        purpose: 'Confirm assay responsiveness.',
+        acceptance_criterion: 'Replace with the frozen facility-specific range.'
+      },
+      {
+        control_id: 'vehicle-control',
+        type: 'vehicle',
+        label: 'Vehicle baseline',
+        purpose: 'Measure the vehicle-only baseline.',
+        acceptance_criterion: 'Replace with the frozen facility-specific range.'
+      }
+    ],
+    hazards: [
+      {
+        hazard_id: 'handling',
+        category: 'chemical',
+        severity: 'moderate',
+        description: 'Potential exposure while qualified staff handle research materials.',
+        worst_case: 'Uncontrolled contact or release.',
+        controls: [
+          {
+            type: 'engineering',
+            description: 'Use facility-selected containment.',
+            verification: 'Qualified staff verify containment before work.'
+          },
+          {
+            type: 'administrative',
+            description: 'Apply the approved facility procedure and authorization process.',
+            verification: 'Named facility reviewer confirms current approval.'
+          }
+        ],
+        emergency_response: 'Stop and apply the facility exposure and spill response plan.',
+        applies_to_steps: ['prepare']
+      }
+    ],
+    steps: [
+      {
+        step_id: 'prepare',
+        title: 'Prepare controlled conditions',
+        operation: 'transfer',
+        instruction:
+          'Qualified external staff prepare sample, reference, and vehicle conditions.',
+        depends_on: [],
+        materials: [
+          { material_id: 'sample', amount: { value: 1, unit: 'planned unit' } },
+          { material_id: 'reference', amount: { value: 1, unit: 'planned unit' } },
+          { material_id: 'vehicle', amount: { value: 1, unit: 'planned unit' } }
+        ],
+        equipment_ids: ['liquid-handler'],
+        parameters: [{ name: 'replicates', value: 3 }],
+        duration: { value: 10, unit: 'minutes' },
+        expected_observation: 'All planned conditions and controls are present.',
+        acceptance_criterion: 'The frozen plate or vessel layout is complete.',
+        on_deviation: 'Stop, preserve state, and open a deviation record.',
+        hazard_ids: ['handling'],
+        risk_note: 'Facility-specific containment and training are required.',
+        outputs: ['Prepared controlled conditions']
+      },
+      {
+        step_id: 'measure',
+        title: 'Acquire frozen response',
+        operation: 'measure',
+        instruction: 'Qualified external staff run the frozen measurement method.',
+        depends_on: ['prepare'],
+        materials: [],
+        equipment_ids: ['reader'],
+        parameters: [{ name: 'method', value: 'replace-with-frozen-method' }],
+        duration: { value: 15, unit: 'minutes' },
+        expected_observation: 'A complete immutable response record is produced.',
+        acceptance_criterion: 'Reference and vehicle controls meet frozen criteria.',
+        on_deviation: 'Stop interpretation and record the deviation.',
+        hazard_ids: [],
+        risk_note: 'No new handling is planned during acquisition.',
+        outputs: ['Immutable response dataset']
+      }
+    ],
+    acceptance_criteria: [
+      {
+        criterion_id: 'valid-run',
+        label: 'Valid controlled run',
+        measure: 'Reference and vehicle control performance',
+        rule: 'Both frozen control criteria must pass before interpretation.'
+      }
+    ],
+    stop_conditions: [
+      'Containment, training, qualification, or control acceptance cannot be verified.'
+    ],
+    training_requirements: [
+      'Facility-approved material handling and equipment training.'
+    ],
+    emergency_procedures: [
+      'Stop work, secure the area, and follow the facility emergency plan.'
+    ],
+    waste_and_decontamination:
+      'Qualified external staff apply the facility hygiene and waste plan.',
+    automation_targets: ['xdl_2_0', 'opentrons_python'],
+    physical_execution_policy: 'external_human_control_only',
+    notes:
+      'Mapping previews are non-executable. Replace every placeholder before review.'
+  };
+}
+
+export function procedureDraftModel(spec) {
+  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) {
+    return {
+      valid: false,
+      issues: ['Draft must be a JSON object.'],
+      steps: [],
+      counts: {
+        steps: 0,
+        hazards: 0,
+        controls: 0,
+        sources: 0,
+        automation_targets: 0
+      },
+      physical_execution_enabled: false
+    };
+  }
+  const steps = asArray(spec.steps);
+  const ids = new Set(steps.map((step) => step?.step_id).filter(Boolean));
+  const issues = [];
+  if (!spec.name) issues.push('Name is required.');
+  if (!spec.objective) issues.push('Objective is required.');
+  if (!steps.length) issues.push('At least one step is required.');
+  if (!asArray(spec.acceptance_criteria).length) {
+    issues.push('At least one overall acceptance criterion is required.');
+  }
+  if (spec.physical_execution_policy !== 'external_human_control_only') {
+    issues.push('Physical execution policy must remain external_human_control_only.');
+  }
+  if (ids.size !== steps.length) issues.push('Step IDs must be present and unique.');
+  const view = steps.map((step, index) => {
+    const dependencies = asArray(step?.depends_on);
+    const unknown = dependencies.filter((dependency) => !ids.has(dependency));
+    if (unknown.length) {
+      issues.push(
+        String(step?.step_id ?? index + 1) + ' has unknown dependencies: ' +
+        unknown.join(', ') + '.'
+      );
+    }
+    return {
+      index: index + 1,
+      step_id: step?.step_id ?? null,
+      title: step?.title ?? step?.step_id ?? 'Untitled step',
+      operation: step?.operation ?? 'unknown',
+      dependencies,
+      hazards: asArray(step?.hazard_ids)
+    };
+  });
+  return {
+    valid: issues.length === 0,
+    issues,
+    steps: view,
+    counts: {
+      steps: steps.length,
+      hazards: asArray(spec.hazards).length,
+      controls: asArray(spec.controls).length,
+      sources: asArray(spec.source_evidence_ids).length,
+      automation_targets: asArray(spec.automation_targets).length
+    },
+    physical_execution_enabled: false
+  };
+}

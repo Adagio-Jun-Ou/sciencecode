@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="ScienceCode local scientific agent workbench">
+    <title>ScienceCode Research Workbench</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/campaign.css">
+    <link rel="stylesheet" href="/cad.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-stage">Skip to research workspace</a>
+    <div class="app-shell">
+      <header class="titlebar">
+        <div class="brand-lockup" aria-label="ScienceCode">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <strong>ScienceCode</strong>
+          <span class="version-badge" id="version-badge">…</span>
+        </div>
+        <div class="project-crumb">
+          <span class="crumb-dot"></span>
+          <span id="project-label">Loading local project</span>
+        </div>
+        <div class="titlebar-actions">
+          <span class="connection loading" id="connection-status" role="status"><i aria-hidden="true"></i><span class="connection-label">Connecting</span></span>
+          <button class="quiet-button" id="refresh-button" type="button" disabled>Refresh</button>
+        </div>
+      </header>
+
+      <aside class="explorer" aria-label="ScienceCode workspace">
+        <div class="explorer-heading">
+          <span>WORKSPACE</span>
+          <button class="square-button" id="new-chat-button" type="button" aria-label="New research conversation" disabled>+</button>
+        </div>
+
+        <nav class="workspace-nav" aria-label="Project views">
+          <button class="workspace-link active" type="button" data-view="chat" aria-current="page" aria-controls="chat-view" disabled>
+            <span class="nav-glyph">›_</span><span>Scientist</span><kbd>1</kbd>
+          </button>
+          <button class="workspace-link" type="button" data-view="campaigns" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#8984;</span><span>Campaigns</span><em id="campaign-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="cad" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#9651;</span><span>CAD Studio</span><em id="cad-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="experiments" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">◇</span><span>Experiments</span><em id="experiment-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="analysis" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">Σ</span><span>Confirmatory</span><em id="analysis-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="procedures" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#8644;</span><span>Procedures</span><em id="procedure-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="simulations" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">⌁</span><span>Simulations</span><em id="simulation-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="inferences" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#9889;</span><span>AI Inference</span><em id="inference-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="evidence" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">≡</span><span>Evidence</span><em id="evidence-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="reviews" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#10003;</span><span>Reviewer</span><em id="review-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="notebook" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">In[]</span><span>Notebook</span><em id="notebook-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="lineage" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#8597;</span><span>Lineage</span><em id="lineage-count">&mdash;</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="reproducibility" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#8801;</span><span>Reproducibility</span><em id="snapshot-count">0</em>
+          </button>
+          <button class="workspace-link" type="button" data-view="verification" aria-controls="archive-view" disabled>
+            <span class="nav-glyph">&#10003;</span><span>Verification</span><em id="verification-count">&mdash;</em>
+          </button>
+        </nav>
+
+        <div class="explorer-section-heading">
+          <span>CONVERSATIONS</span>
+          <span id="chat-count">0</span>
+        </div>
+        <div class="chat-list" id="chat-list" aria-live="polite">
+          <div class="skeleton-list"><i></i><i></i><i></i></div>
+        </div>
+
+        <div class="runtime-card" id="runtime-card">
+          <div class="runtime-topline"><span>COMPUTE</span><b id="compute-health">CHECKING</b></div>
+          <strong id="compute-title">Detecting runtime</strong>
+          <p id="compute-runtime">Isolated Python and accelerator status.</p>
+          <div class="memory-line"><span id="memory-fill"></span></div>
+          <div class="runtime-facts" id="compute-facts"></div>
+        </div>
+      </aside>
+
+      <main class="main-stage" id="main-stage" tabindex="-1" aria-busy="true">
+        <section class="center-view active" id="chat-view" aria-labelledby="chat-title">
+          <header class="editor-toolbar">
+            <div>
+              <span class="editor-tab active"><i></i> research.chat</span>
+              <span class="dirty-indicator" id="recording-indicator">RECORDED</span>
+            </div>
+            <span class="engine-label">project-local OpenCode engine</span>
+          </header>
+
+          <header class="conversation-header">
+            <div>
+              <span class="section-kicker">CONVERSATIONAL SCIENCE HARNESS</span>
+              <h1 id="chat-title" tabindex="-1">New research conversation</h1>
+            </div>
+            <span class="run-state" id="chat-status"><i></i><span>Ready</span></span>
+          </header>
+
+          <div class="chat-messages" id="chat-messages" aria-live="polite" aria-busy="true">
+            <div class="initial-workspace-state loading" id="initial-workspace-state">
+              <span class="loading-orbit" aria-hidden="true"><i></i><i></i><i></i></span>
+              <strong>Verifying the local project</strong>
+              <p>Checking record integrity and available compute. Larger projects can take a few seconds on the first load.</p>
+            </div>
+          </div>
+
+          <div class="starter-actions" id="starter-actions" aria-label="Suggested research tasks" hidden>
+            <button type="button" data-prompt="Create a multi-file parametric OpenSCAD environment for this design. State dimensions, constraints, parts, assembly relationships, build-volume assumptions, geometry checks, and a safe slicing plan. Render and simulate virtually, but do not transmit G-code or control a printer.">
+              <span>CAD ENGINEERING</span><strong>Part → assembly → slice</strong><small>SCAD, mesh, geometry screen, print preview</small>
+            </button>
+            <button type="button" data-prompt="Build a stage-gated drug-discovery plan for this project. Define the context of use, evidence needed, competing target hypotheses, assay strategy, computational validation, safety gates, and the next falsifying experiment.">
+              <span>DRUG DISCOVERY</span><strong>Target → assay → candidate</strong><small>Evidence, ADMET, safety, validation</small>
+            </button>
+            <button type="button" data-prompt="Develop a reproducible scientific procedure from the methods in this project. Include source provenance, materials, equipment, controls, acceptance criteria, hazards, dry-run requirements, and human approval gates. Do not execute physical hardware.">
+              <span>PROCEDURE</span><strong>Design a validated method</strong><small>Steps, controls, hazards, approval</small>
+            </button>
+            <button type="button" data-prompt="Review the current project evidence. Map every important claim to a recorded source or artifact, identify contradictory evidence and unsupported claims, and propose the strongest next verification step.">
+              <span>EVIDENCE</span><strong>Audit the research record</strong><small>Claims, sources, gaps, uncertainty</small>
+            </button>
+            <button type="button" data-prompt="Design a deterministic GPU experiment for the current scientific question. State the hypothesis, parameters, seeds, controls, expected artifacts, numerical checks, and independent review plan before running anything.">
+              <span>COMPUTE</span><strong>Plan a GPU experiment</strong><small>Seeds, matrix, artifacts, review</small>
+            </button>
+          </div>
+
+          <form class="composer" id="chat-form">
+            <label for="chat-input">Research request</label>
+            <textarea id="chat-input" maxlength="32768" rows="3" placeholder="Ask ScienceCode to investigate, design, simulate, review, or build…" disabled></textarea>
+            <div class="composer-toolbar">
+              <div class="agent-select-wrap">
+                <span class="agent-pulse"></span>
+                <select id="agent-select" name="agent" aria-label="Primary agent" disabled>
+                  <option value="scientist">Scientist</option>
+                  <option value="data-analyst">Data analyst</option>
+                  <option value="methodologist">Methodologist</option>
+                  <option value="literature-reviewer">Literature reviewer</option>
+                  <option value="simulation-engineer">Simulation engineer</option>
+                  <option value="cad-engineer">CAD engineer</option>
+                </select>
+              </div>
+              <span class="composer-hint">Enter to run · Shift+Enter for newline</span>
+              <button class="stop-button" id="stop-button" type="button" hidden
+                aria-label="Stop the active ScienceCode turn"><span>Stop</span><i>■</i></button>
+              <button class="run-button" id="send-button" type="submit" disabled><span>Run</span><i>↗</i></button>
+            </div>
+          </form>
+        </section>
+
+        <section class="center-view archive-view" id="archive-view" aria-labelledby="archive-title" hidden>
+          <header class="editor-toolbar">
+            <div><span class="editor-tab active"><i></i> project.records</span></div>
+            <button class="quiet-button" id="back-to-chat" type="button">Back to chat</button>
+          </header>
+          <div class="archive-header">
+            <span class="section-kicker" id="archive-kicker">RECORDED OUTPUTS</span>
+            <h1 id="archive-title" tabindex="-1">Project evidence</h1>
+            <p id="archive-summary">Verified ScienceCode artifacts and decision records.</p>
+          </div>
+          <div class="archive-grid" id="archive-list"></div>
+          <div class="record-detail" id="record-detail" role="region" aria-label="Record detail" tabindex="-1" hidden></div>
+        </section>
+      </main>
+
+      <aside class="harness" aria-label="Scientific harness">
+        <header class="harness-header">
+          <div>
+            <span class="section-kicker">VISIBLE ORCHESTRATION</span>
+            <h2>Harness</h2>
+          </div>
+          <span class="harness-live" id="harness-live"><i></i><span>Idle</span></span>
+        </header>
+        <nav class="harness-tabs" aria-label="Harness views" role="tablist">
+          <button class="active" id="harness-tab-activity" type="button" role="tab" aria-selected="true" aria-controls="harness-activity" data-harness-tab="activity">Activity</button>
+          <button id="harness-tab-design" type="button" role="tab" aria-selected="false" aria-controls="harness-design" tabindex="-1" data-harness-tab="design">Design</button>
+          <button id="harness-tab-outcome" type="button" role="tab" aria-selected="false" aria-controls="harness-outcome" tabindex="-1" data-harness-tab="outcome">Outcome</button>
+        </nav>
+
+        <section class="harness-pane active" id="harness-activity" role="tabpanel" aria-labelledby="harness-tab-activity" tabindex="0">
+          <div class="empty-harness">
+            <span class="radar-mark"><i></i></span>
+            <strong>No active work</strong>
+            <p>Run a scientific task to see the supervisor, real tool calls, recorded changes, and review gates here.</p>
+          </div>
+        </section>
+        <section class="harness-pane" id="harness-design" role="tabpanel" aria-labelledby="harness-tab-design" tabindex="0" hidden></section>
+        <section class="harness-pane" id="harness-outcome" role="tabpanel" aria-labelledby="harness-tab-outcome" tabindex="0" hidden></section>
+
+        <footer class="harness-footer">
+          <span id="transcript-status">NO TRANSCRIPT</span>
+          <code id="transcript-hash">waiting for a recorded turn</code>
+        </footer>
+      </aside>
+    </div>
+
+    <div class="notice" id="notice" role="alert" hidden></div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

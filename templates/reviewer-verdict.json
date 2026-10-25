@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "reviewed_run_id": "",
+  "reviewer": "reproducibility-reviewer",
+  "verdict": "pass_with_caveats",
+  "claim_supported": false,
+  "reproduction_status": "not_attempted",
+  "checks": [],
+  "discrepancies": [],
+  "limitations": [],
+  "required_follow_up": [],
+  "reviewed_at": ""
+}
+

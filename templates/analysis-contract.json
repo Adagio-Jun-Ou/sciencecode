@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "name": "Prospective computational analysis",
+  "hypothesis": "State the directional, falsifiable hypothesis before inspecting experiment outcomes.",
+  "preregistration_id": "REPLACE_WITH_PREREGISTRATION_ID",
+  "script": "analysis.py",
+  "analysis_population": "All prespecified experiment branches that satisfy the exact primary-outcome filter.",
+  "conditions": "Describe the comparison, fixed conditions, varied parameters, seeds, and time horizon.",
+  "missing_data_policy": "fail",
+  "multiplicity_policy": "One primary outcome. Secondary and exploratory outcomes do not change the primary verdict.",
+  "outcomes": [
+    {
+      "outcome_id": "primary_outcome",
+      "role": "primary",
+      "label": "Primary outcome",
+      "statistic": "primary_value",
+      "variable": "Define the measured or simulated quantity operationally.",
+      "unit": {
+        "symbol": "REPLACE_WITH_REGISTERED_UNIT"
+      },
+      "timepoint": "Final prespecified simulation step",
+      "summary_measure": "Arithmetic mean across the prespecified branches",
+      "intercurrent_event_strategy": "A failed, unverified, missing, malformed, non-finite, or dimensionally incompatible branch makes the outcome indeterminate.",
+      "aggregation": "mean",
+      "minimum_count": 3,
+      "filter": {},
+      "decision_rule": {
+        "operator": "greater_than_or_equal",
+        "value": {
+          "value": 0,
+          "unit": "REPLACE_WITH_REGISTERED_UNIT"
+        }
+      }
+    }
+  ],
+  "sensitivity_analyses": [
+    "Describe a prespecified sensitivity analysis that does not silently replace the primary rule."
+  ],
+  "exclusions": "No post-execution branch exclusions unless disclosed as a deviation.",
+  "notes": "A deterministic threshold contract does not establish a p-value, causal effect, clinical benefit, or regulatory conclusion."
+}
